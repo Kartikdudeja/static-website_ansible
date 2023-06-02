@@ -1,0 +1,52 @@
+
+- name: "Deploy Static Website using Ansible"
+  hosts: nodes
+  become: yes
+  gather_facts: yes
+  vars:
+    PACKAGES:
+      - httpd
+      - unzip
+    
+    TEMPLATE_URL: "https://www.tooplate.com/zip-templates/2129_crispy_kitchen.zip"
+    TEMPLATE_FILE_NAME: "2129_crispy_kitchen"
+
+  tasks:
+  # Install Packages (httpd wget unzip)
+  - name: Install Packages
+    ansible.builtin.package:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ PACKAGES }}"
+
+
+  # Start & Enable httpd service
+  - name: "Start & Enable httpd service"
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: true
+
+  # Download Website Template & extract Template files
+  - name: "Download Website Template & extract Template files"
+    ansible.builtin.unarchive:
+      src: "{{ TEMPLATE_URL }}"
+      dest: /tmp
+      remote_src: true
+
+  # Placing the Template files in '/var/www/html/' directory for serving the content via httpd
+  - name: "Placing the Template files in '/var/www/html/' directory for serving the content via httpd"
+    ansible.builtin.copy:
+      src: /tmp/{{ TEMPLATE_FILE_NAME }}/
+      dest: /var/www/html
+      remote_src: true
+      
+    # Restart httpd service
+    notify:
+    - restart_web_service
+
+  handlers:
+  - name: restart_web_service
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
