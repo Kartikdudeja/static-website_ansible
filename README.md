@@ -1,14 +1,27 @@
-# Deploy a Static Website with Ansible
+# Ansible Playbook: Deploy Static Website
 
-Ansible is an IT automation tool. It can configure systems, deploy software, and orchestrate more advanced IT tasks such as continuous deployments or zero downtime rolling updates.
+## Description
 
-In this Project, We will be Deploying a Static Website using Ansible Playbook.
+This Ansible playbook automates the deployment of a static website to a web server. The playbook sets up the necessary web server (e.g., Apache) and transfers the static website files to the server.
+
+## Requirements
+
+Ansible: The control machine should have Ansible installed.  
+Inventory: Create an inventory file (inventory/hosts) to specify the target web server(s).  
+SSH Access: Ensure that SSH key-based authentication is set up between the control machine and the target web server(s).
 
 ## Deployment Steps:
 
-1. Ensure that Ansible Host is able to connect to Target hosts via SSH.
-    > Note: Update Target host IP's in the 'inventory.ini' file
-2. Run the Playbook using the following command
+1. Clone this repository to your local machine:
 ``` bash
-ansible-playbook -i inventory.ini host-static-website.yaml
+git clone https://github.com/Kartikdudeja/static-website_ansible.git
+cd static-website_ansible
+```
+
+2. Customization:  
+Update the `inventory` file to specify the target web server(s) where you want to deploy the static website.
+
+3. Execute the playbook using the following command:
+``` bash
+ansible-playbook -i inventory.ini deploy-static-website.yaml
 ```
